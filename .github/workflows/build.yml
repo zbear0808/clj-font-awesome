@@ -1,0 +1,58 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout repository
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Needed for git-count-revs in build.clj
+    
+    # Setup Java
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+    
+    # Setup Clojure
+    - name: Setup Clojure
+      uses: DeLaGuardo/setup-clojure@13.4
+      with:
+        cli: '1.12.0.1495'
+    
+    # Cache Clojure dependencies
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.m2/repository
+          ~/.gitlibs
+        key: ${{ runner.os }}-clojure-${{ hashFiles('**/deps.edn') }}
+        restore-keys: |
+          ${{ runner.os }}-clojure-
+    
+    # Run tests
+    - name: Run tests
+      run: clojure -M:test
+    
+    # Build JAR
+    - name: Build JAR
+      run: clojure -T:build jar
+    
+    # Upload JAR artifact
+    - name: Upload JAR artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: clj-font-awesome-jar
+        path: target/*.jar
+        retention-days: 30

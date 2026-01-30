@@ -52,19 +52,21 @@
      :color       Text fill color (CSS value, keyword, or JavaFX Paint)
      :style-class Additional CSS class(es) - string or vector of strings
    
+   Any additional props are passed through to the underlying Label component.
+   
    Returns: cljfx Label description map
    
    Examples:
      {:fx/type icon :name :gear :size 24}
      {:fx/type icon :name :heart :style :regular :color :red}
-     {:fx/type icon :name :github :style :brands :size 32}"
+     {:fx/type icon :name :github :style :brands :size 32}
+     {:fx/type icon :name :gear :on-mouse-clicked handler}"
   [{:keys [name style size color style-class]}]
-  (let [unicode-char (unicode! name style)]
-    (cond-> {:fx/type :label
-             :text unicode-char
-             :font (fonts/font style size)
-             :style-class style-class}
-      color (assoc :text-fill color))))
+  (cond-> {:fx/type :label
+           :text (unicode! name style)
+           :font (fonts/font style size)
+           :style-class style-class}
+    color (assoc :text-fill color)))
 
 
 (comment

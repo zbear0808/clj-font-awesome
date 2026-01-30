@@ -1,0 +1,55 @@
+name: Publish to Clojars
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+    
+    - name: Setup Clojure
+      uses: DeLaGuardo/setup-clojure@13.4
+      with:
+        cli: '1.12.0.1495'
+    
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.m2/repository
+          ~/.gitlibs
+        key: ${{ runner.os }}-clojure-${{ hashFiles('**/deps.edn') }}
+        restore-keys: |
+          ${{ runner.os }}-clojure-
+    
+    - name: Run tests
+      run: clojure -M:test
+    
+    - name: Deploy to Clojars
+      run: clojure -T:build deploy
+      env:
+        # deps-deploy expects CLOJARS_USERNAME and CLOJARS_PASSWORD
+        # CLOJARS_PASSWORD should be a deploy token, not your account password
+        # Create a token at: https://clojars.org/tokens
+        CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+        CLOJARS_PASSWORD: ${{ secrets.CLOJARS_DEPLOY_TOKEN }}
+    
+    - name: Upload JAR to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: target/*.jar

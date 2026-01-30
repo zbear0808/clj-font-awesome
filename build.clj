@@ -2,8 +2,8 @@
   (:require [clojure.tools.build.api :as b]
             [deps-deploy.deps-deploy :as dd]))
 
-(def lib 'io.github.your-org/clj-font-awesome)
-(def version (format "0.1.%s" (b/git-count-revs nil)))
+(def lib 'org.clojars.zubad/clj-font-awesome)
+(def version (format "0.0.%s" (b/git-count-revs nil)))
 (def class-dir "target/classes")
 (def basis (b/create-basis {:project "deps.edn"}))
 (def jar-file (format "target/%s-%s.jar" (name lib) version))
@@ -19,9 +19,9 @@
                 :basis basis
                 :src-dirs ["src"]
                 :resource-dirs ["resources"]
-                :scm {:url "https://github.com/your-org/clj-font-awesome"
-                      :connection "scm:git:git://github.com/your-org/clj-font-awesome.git"
-                      :developerConnection "scm:git:ssh://git@github.com/your-org/clj-font-awesome.git"
+                :scm {:url "https://github.com/zbear0808/clj-font-awesome"
+                      :connection "scm:git:git://github.com/zbear0808/clj-font-awesome.git"
+                      :developerConnection "scm:git:ssh://git@github.com/zbear0808/clj-font-awesome.git"
                       :tag (str "v" version)}})
   (b/copy-dir {:src-dirs ["src" "resources"]
                :target-dir class-dir})

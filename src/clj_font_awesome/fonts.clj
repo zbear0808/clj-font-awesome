@@ -8,12 +8,12 @@
    :regular "clj-font-awesome/fonts/fa7-regular.otf"
    :brands  "clj-font-awesome/fonts/fa7-brands.otf"})
 
-(defn- load-font [style size] 
+(defn- load-font [style size]
   (let [resource-path (get font-resources style)]
    (cond (not (get font-resources style))
         (throw (ex-info (str "Unknown font style: " style) {}))
         
-        (io/resource resource-path)
+        (not (io/resource resource-path))
         (throw (ex-info (str "Font resource not found: " resource-path) {}))
         
         :else

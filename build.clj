@@ -8,6 +8,20 @@
 (def basis (b/create-basis {:project "deps.edn"}))
 (def jar-file (format "target/%s-%s.jar" (name lib) version))
 
+(def pom-data
+  [[:description "Clojure library for using Font Awesome 7 icons in cljfx/JavaFX applications"]
+   [:url "https://github.com/zbear0808/clj-font-awesome"]
+   [:licenses
+    [:license
+     [:name "MIT"]
+     [:url "https://opensource.org/licenses/MIT"]]
+    [:license
+     [:name "SIL OFL 1.1"]
+     [:url "https://scripts.sil.org/OFL"]]
+    [:license
+     [:name "CC BY 4.0"]
+     [:url "https://creativecommons.org/licenses/by/4.0/"]]]])
+
 (defn clean [_]
   (b/delete {:path "target"}))
 
@@ -19,6 +33,7 @@
                 :basis basis
                 :src-dirs ["src"]
                 :resource-dirs ["resources"]
+                :pom-data pom-data
                 :scm {:url "https://github.com/zbear0808/clj-font-awesome"
                       :connection "scm:git:git://github.com/zbear0808/clj-font-awesome.git"
                       :developerConnection "scm:git:ssh://git@github.com/zbear0808/clj-font-awesome.git"

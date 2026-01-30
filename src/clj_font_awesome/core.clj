@@ -61,33 +61,10 @@
      {:fx/type icon :name :heart :style :regular :color :red}
      {:fx/type icon :name :github :style :brands :size 32}
      {:fx/type icon :name :gear :on-mouse-clicked handler}"
-  [{:keys [name style size color style-class]}]
+  [{:keys [name style size color style-class]
+    :or {style :solid size 16}}]
   (cond-> {:fx/type :label
            :text (unicode! name style)
-           :font (fonts/font style size)
-           :style-class style-class}
+           :font (fonts/font style size)}
+    style-class (assoc :style-class style-class)
     color (assoc :text-fill color)))
-
-
-(comment
-  ;; Example cljfx usage:
-  
-  (require '[cljfx.api :as fx])
-  
-  ;; Simple icon
-  {:fx/type icon
-   :name :gear
-   :size 16}
-  
-  ;; Icon with color
-  {:fx/type icon
-   :name :heart
-   :style :solid
-   :size 24
-   :color "#ff0000"}
-  
-  ;; Brand icon
-  {:fx/type icon
-   :name :github
-   :style :brands
-   :size 32})
